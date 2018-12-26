@@ -7,6 +7,7 @@ local MaxDps = MaxDps;
 local UnitPower = UnitPower;
 local EnumPowerType = Enum.PowerType;
 local UnitExists = UnitExists;
+local playerLevel = UnitLevel("player");
 
 local Warlock = MaxDps:NewModule('Warlock', 'AceEvent-3.0');
 
@@ -240,9 +241,12 @@ function Warlock:Affliction()
 		return AF.DrainSoul;
 	end
 
-	-- haunt,if=spell_targets.seed_of_corruption_aoe<=2+raid_event.invulnerable.up;
-	if cooldown[AF.Haunt].ready and currentSpell ~= AF.Haunt and (targets <= 2) then
-		return AF.Haunt;
+	-- Sylvain Haunt est disponible seulement au level 90
+	if playerLevel >= 90 then
+		-- haunt,if=spell_targets.seed_of_corruption_aoe<=2+raid_event.invulnerable.up;
+		if cooldown[AF.Haunt].ready and currentSpell ~= AF.Haunt and (targets <= 2) then
+			return AF.Haunt;
+		end
 	end
 
 	-- summon_darkglare,if=dot.agony.ticking&dot.corruption.ticking&(buff.active_uas.stack=5|soul_shard=0)&(!talent.phantom_singularity.enabled|cooldown.phantom_singularity.remains)&(!talent.deathbolt.enabled|cooldown.deathbolt.remains<=gcd|!cooldown.deathbolt.remains|spell_targets.seed_of_corruption_aoe>1+raid_event.invulnerable.up);
@@ -577,9 +581,12 @@ function Warlock:AfflictionFillers()
 		return AF.DrainLife;
 	end
 
-	-- haunt;
-	if cooldown[AF.Haunt].ready and currentSpell ~= AF.Haunt then
-		return AF.Haunt;
+	-- Sylvain Haunt est disponible seulement au level 90
+	if playerLevel >= 90 then
+		-- haunt;
+		if cooldown[AF.Haunt].ready and currentSpell ~= AF.Haunt then
+			return AF.Haunt;
+		end
 	end
 
 	-- drain_soul,interrupt_global=1,chain=1,interrupt=1,cycle_targets=1,if=target.time_to_die<=gcd;
